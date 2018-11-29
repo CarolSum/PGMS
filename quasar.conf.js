@@ -46,11 +46,15 @@ module.exports = function (ctx) {
         'QCardActions',
         'QCardMain',
         'QCardTitle',
+        'QCardSeparator',
         'QLayout',
         'QLayoutHeader',
         'QLayoutDrawer',
         'QPageContainer',
         'QPage',
+        'QTabs',
+        'QTabPane',
+        'QRouteTab',
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
@@ -58,12 +62,15 @@ module.exports = function (ctx) {
         'QAjaxBar',
         'QIcon',
         'QInput',
+        'QItemSeparator',
         'QList',
         'QListHeader',
         'QItem',
         'QItemMain',
         'QItemSide',
-        'QSpinnerMat'
+        'QPopover',
+        'QSpinnerMat',
+        'QScrollArea'
       ],
       directives: [
         'Ripple'
