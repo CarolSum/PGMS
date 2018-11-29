@@ -4,7 +4,8 @@ module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
     plugins: [
-      'axios'
+      'axios',
+      'vuelidate'
     ],
     css: [
       'app.styl'
@@ -49,6 +50,7 @@ module.exports = function (ctx) {
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
+        'QAjaxBar',
         'QIcon',
         'QList',
         'QListHeader',
@@ -110,6 +112,10 @@ module.exports = function (ctx) {
           }
         ]
       }
+    },
+    // default values
+    sourceFiles: {
+      indexHtmlTemplate: 'src/index.html'
     },
     cordova: {
       // id: 'org.cordova.quasar.app'
