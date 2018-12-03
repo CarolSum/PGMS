@@ -104,7 +104,7 @@ export function failAlert ({info, icon}) {
     message: info,
     type: 'negative',
     icon,
-    position: 'top-center',
+    position: 'top',
     enter: 'bounceInDown',
     leave: 'bounceOutUp'
   })
