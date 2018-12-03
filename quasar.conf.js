@@ -5,7 +5,8 @@ module.exports = function (ctx) {
     // app plugins (/src/plugins)
     plugins: [
       'axios',
-      'vuelidate'
+      'vuelidate',
+      'Notify'
     ],
     css: [
       'app.styl'
@@ -42,6 +43,7 @@ module.exports = function (ctx) {
     // framework: 'all' --- includes everything; for dev only!
     framework: {
       components: [
+        'QAlert',
         'QCard',
         'QCardActions',
         'QCardMain',

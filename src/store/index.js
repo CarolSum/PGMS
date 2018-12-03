@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import signin from './signin'
+import actions from './actions'
+import mutations from './mutations'
 import getters from './getters'
-
-import SignIn from './signin'
-
 Vue.use(Vuex)
 
 /*
@@ -11,19 +11,22 @@ Vue.use(Vuex)
  * directly export the Store instantiation
  */
 
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
-    state: {
-      isAuthenticated: true,
-      name: '',
-      userType: 'teacher',
-      activeSubsystem: 'signIn'
-    },
-    getters,
-    modules: {
-      SignIn
-    }
-  })
-
-  return Store
+// 模块放置在此对象中
+const modules = {
+  signin
 }
+
+const Store = new Vuex.Store({
+  state: {
+    isAuthenticated: true,
+    name: '',
+    userType: 'teacher',
+    activeSubsystem: 'signIn'
+  },
+  modules,
+  actions,
+  mutations,
+  getters
+})
+
+export default Store
