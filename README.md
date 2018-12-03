@@ -1,3 +1,3 @@
-# Quasar App
+# Postgraduate Manage System
 
-> WIP
+> WIP 0.0.1

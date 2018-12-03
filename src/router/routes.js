@@ -13,6 +13,7 @@ const routes = [
     },
     children: [
       {path: 'home', component: () => import('components/signin/Home.vue')},
+      {path: 'personal', component: () => import('components/signin/Personal.vue')},
       {path: '', redirect: 'home'}
     ]
   },
