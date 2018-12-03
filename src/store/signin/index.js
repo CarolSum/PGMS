@@ -1,16 +1,41 @@
+import actions from './actions'
+import mutations from './mutations'
 
-export default {
-  namespaced: true,
-  state: () => ({
-    isLogin: true
-  }),
-  mutations: {
-
+const module = {
+  state: {
+    lectureList: [],
+    positions: {},
+    student: {
+      records: [],
+      lastRegister: {},
+      isLeaving: false
+    },
+    teacher: {
+      studentsMap: {}
+    },
+    feedback: '',
+    cachedLectureInfo: {},
+    recordUpdateDate: {},
+    leavingRecords: []
   },
-  getters: {
-
-  },
-  actions: {
-
-  }
+  actions,
+  mutations
 }
+
+export default module
+
+// export default {
+//   namespaced: true,
+//   state: () => ({
+//     isLogin: true
+//   }),
+//   mutations: {
+
+//   },
+//   getters: {
+
+//   },
+//   actions: {
+
+//   }
+// }
