@@ -40,6 +40,8 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators'
+import { LOGIN } from '../../store/actions'
+import { succeed, fail } from '../../util/notification'
 
 export default {
   name: 'Login',
@@ -55,6 +57,17 @@ export default {
       if (this.$v.$invalid) {
         return false
       }
+      let data = {
+        username: this.username,
+        password: this.password
+      }
+      this.$store.dispatch(LOGIN, data)
+        .then(() => {
+          succeed({info: '登录成功'})
+          this.$router.push(this.$store.getters.navigationItems[0].to)
+        })
+        .catch(error => fail({info: error.message}))
+      // .finally(() => done())
     }
   },
   validations: {
@@ -62,6 +75,9 @@ export default {
     password: {required}
   },
   mounted () {
+    if (this.$store.state.isAuthenticated) {
+      this.$router.push('/signin')
+    }
   }
 }
 </script>

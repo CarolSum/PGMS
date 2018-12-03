@@ -1,4 +1,5 @@
 // Configuration for your app
+const path = require('path')
 
 module.exports = function (ctx) {
   return {
@@ -33,6 +34,14 @@ module.exports = function (ctx) {
           loader: 'eslint-loader',
           exclude: /node_modules/
         })
+
+        cfg.resolve.alias = {
+          ...cfg.resolve.alias, // This adds the existing alias
+
+          // Add your own alias like this
+          '@': path.join(__dirname, '..', 'src'),
+          '@components': path.join(__dirname, '..', 'src/components')
+        }
       }
     },
     devServer: {
@@ -54,6 +63,7 @@ module.exports = function (ctx) {
     framework: {
       components: [
         'QAlert',
+        'QBtnDropdown',
         'QCard',
         'QCardActions',
         'QCardMain',
@@ -62,6 +72,7 @@ module.exports = function (ctx) {
         'QLayout',
         'QLayoutHeader',
         'QLayoutDrawer',
+        'QModal',
         'QPageContainer',
         'QPage',
         'QTabs',

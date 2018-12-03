@@ -3,7 +3,7 @@
   <q-layout ref="layout" view="lHh Lpr lfr" :left-style="{width: '250px'}">
     <q-layout-header>
       <q-toolbar>
-        <q-btn flat @click="showLeft = !showLeft">
+        <q-btn flat @click="showLeftSider = !showLeftSider">
           <q-icon name="menu"/>
         </q-btn>
         <q-toolbar-title>
@@ -13,20 +13,21 @@
           </span>
         </q-toolbar-title>
 
-        <q-btn flat right>
-          <q-icon name="settings"/>
-          <!--popover 弹出框-->
-          <q-popover v-model="settingPopoverVisible">
-            <q-list separator link>
-              <q-item @click="callModal">
-                修改密码
-              </q-item>
-              <q-item @click="logout">
-                退出登录
-              </q-item>
-            </q-list>
-          </q-popover>
-        </q-btn>
+        <q-btn-dropdown flat right icon="settings"  v-model="settingPopoverVisible">
+          <!-- dropdown content -->
+          <q-list link>
+            <q-item>
+              <q-item-main>
+                <q-item-tile label @click="callModal">修改密码</q-item-tile>
+              </q-item-main>
+            </q-item>
+            <q-item>
+              <q-item-main>
+                <q-item-tile label @click="logout">退出登录</q-item-tile>
+              </q-item-main>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-toolbar>
 
       <q-tabs>
@@ -42,7 +43,7 @@
       </q-tabs>
     </q-layout-header>
 
-    <q-layout-drawer side="left" v-model="showLeft">
+    <q-layout-drawer side="left" v-model="showLeftSider">
       <div class="row flex-center bg-white" style="width: 100%; height: 100px;">
         <img src="../assets/logo.svg" style="width: 200px"/>
       </div>
@@ -61,7 +62,7 @@
         </template>
       </q-list>
     </q-layout-drawer>
-
+    <change-pwd-modal v-model="modalVisible"/>
     <!-- 子路由在这里注入: -->
     <q-page-container>
       <router-view />
@@ -71,42 +72,37 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { lostConnection } from '../util/notification'
+import { LOGOUT } from '../store/actions'
+import ChangePwdModal from '../components/share/ChangePwdModal.vue'
 
 export default {
   name: 'Layout',
+  components: {
+    ChangePwdModal
+  },
   data () {
     return {
       modalVisible: false,
       settingPopoverVisible: false,
-      showLeft: true
+      showLeftSider: true
     }
   },
   computed: {
-    // activeItems () {
-    //   return {
-    //     home: {to: './home', icon: 'home', name: '主页'},
-    //     lectureManage: {to: './lecture-manage', icon: 'assignment turned in', name: '讲座'},
-    //     record: {to: './record', icon: 'today', name: '签到'},
-    //     leave: {to: './leave', icon: 'report problem', name: '请假'},
-    //     personal: {to: './personal', icon: 'assignment turned in', name: '个人'}
-    //   }
-    // },
-    // navigationItems () {
-    //   return [
-    //     {to: '/signin', icon: 'check', name: '签到考勤系统'},
-    //     {to: '/bichoice', icon: 'check', name: '双选系统'}
-    //   ]
-    // },
     ...mapGetters([
       'activeItems', 'navigationItems', 'activeSubsystemDisplayName'
     ])
   },
   methods: {
     logout () {
-
+      this.settingPopoverVisible = false
+      this.$store.dispatch(LOGOUT)
+        .then(() => this.$router.push('/login'))
+        .catch(() => lostConnection())
     },
     callModal () {
-
+      this.settingPopoverVisible = false
+      this.modalVisible = true
     }
   }
 }
