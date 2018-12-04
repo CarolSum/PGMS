@@ -4,59 +4,87 @@
       <q-btn color="green" icon="add" @click="callModalLeavingApply">申请请假</q-btn>
     </div>
     <div class="bg-white">
-      <q-data-table
+      <q-table
+        :title="title"
         :data="leavingRecords"
-        :config="config"
+        :filter="filter"
         :columns="userType === 'student' || userType === 'assistant' ? studentColumns : manageColumns"
-      >
+        :visible-columns="visibleColumns"
+        :options="[
+          { label: 'Chinese (Simplified)', value: 'zh-hans' },
+        ]">
 
-        <template slot="col-permission" slot-scope="cell">
-          <div>
-            <q-icon
-              :color="permissionDisplay(cell.row).color"
-              :name="permissionDisplay(cell.row).icon"
-              style="font-size: 22px"/>
-            <q-tooltip>{{ permissionDisplay(cell.row).info }}</q-tooltip>
-          </div>
+        <template slot="top-left" slot-scope="props">
+          <q-search
+            hide-underline
+            color="secondary"
+            v-model="filter"
+            class="col-6"
+            clearable
+          />
         </template>
 
-        <template slot="col-lookup" slot-scope="cell">
+        <template slot="top-right" slot-scope="props">
+          <q-table-columns
+            color="secondary"
+            class="q-mr-sm"
+            v-model="visibleColumns"
+            label="显示项目"
+            :columns="userType === 'student' || userType === 'assistant' ? studentColumns : manageColumns"
+          />
+          <q-btn
+            flat round dense
+            :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+            @click="props.toggleFullscreen"
+          />
+        </template>
+
+        <q-td slot="body-cell-permission" slot-scope="props" :props="props">
+          <div>
+            <q-icon
+              :color="permissionDisplay(props.row).color"
+              :name="permissionDisplay(props.row).icon"
+              style="font-size: 22px"/>
+            <q-tooltip>{{ permissionDisplay(props.row).info }}</q-tooltip>
+          </div>
+        </q-td>
+
+        <q-td slot="body-cell-lookup" slot-scope="props" :props="props">
           <q-btn
             :disable="busy"
             color="secondary"
-            @click="(event, done) => callModalLeavingModify(event, done, cell.row.id)"
+            @click="(event, done) => callModalLeavingModify(event, done, props.row.id)"
           >
             <q-icon name="search"/>
             <q-spinner-mat slot="loading"/>
           </q-btn>
-        </template>
+        </q-td>
 
-        <template slot="col-deleteBtn" slot-scope="cell">
+        <q-td slot="body-cell-deleteBtn" slot-scope="props" :props="props">
           <q-btn
             color="red"
-            @click="deleteRecord(cell.row.id)"
-            :disable="cell.row.permission !== 0"
+            @click="deleteRecord(props.row.id)"
+            :disable="props.row.permission !== 0"
           >
             <q-icon name="delete forever"/>
             <q-tooltip
-              v-if="cell.row.permission !== 0"
+              v-if="props.row.permission !== 0"
             >已处理的请求不能修改
             </q-tooltip>
           </q-btn>
-        </template>
+        </q-td>
 
-        <template slot="col-permit" slot-scope="cell">
+        <q-td slot="body-cell-permit" slot-scope="props" :props="props">
           <q-btn
             :disable="busy"
             color="secondary"
-            @click="(event, done) => callDialogLeavingPermit(event, done, cell.row.id)"
+            @click="(event, done) => callDialogLeavingPermit(event, done, props.row.id)"
           >
             <q-icon name="search"/>
             <q-spinner-mat slot="loading"/>
           </q-btn>
-        </template>
-
-      </q-data-table>
+        </q-td>
+      </q-table>
     </div>
     <leave-modal ref="leaveModal"/>
   </div>
@@ -142,33 +170,81 @@ export default {
   data () {
     return {
       busy: false,
-      config: {
-        rowHeight: '53px',
-        title: '请假记录',
-        bodyStyle: {
-          /* auto */
-        },
-        responsive: true,
-        pagination: {
-          rowsPerPage: 10,
-          options: [5, 10, 15, 30, 50, 100]
-        },
-        selection: false,
-        messages: {
-          noData: '没有数据',
-          noDataAfterFiltering: '没有符合条件的记录'
-        },
-        columnPicker: true,
-        labels: {
-          columns: '显示项目',
-          allCols: '在所有列中查找',
-          rows: '每页行数',
-          search: '查找',
-          all: '全部'
-        },
-        rightStickyColumns: 3
+      rowHeight: '53px',
+      title: '请假记录',
+      bodyStyle: {
+        /* auto */
       },
+      responsive: true,
+      pagination: {
+        rowsPerPage: 10,
+        options: [5, 10, 15, 30, 50, 100]
+      },
+      selection: false,
+      messages: {
+        noData: '没有数据',
+        noDataAfterFiltering: '没有符合条件的记录'
+      },
+      columnPicker: true,
+      labels: {
+        columns: '显示项目',
+        allCols: '在所有列中查找',
+        rows: '每页行数',
+        search: '查找',
+        all: '全部'
+      },
+      rightStickyColumns: 3,
+      filter: '',
+      visibleColumns: ['id', 'fromDate', 'toDate', 'permission', 'lookup', 'deleteBtn'],
       studentColumns: [
+        {
+          name: 'id',
+          label: '记录号',
+          field: 'id',
+          style: 'width: 100px',
+          align: 'center',
+          sortable: true,
+          type: 'number'
+        }, {
+          name: 'fromDate',
+          label: '开始日期',
+          field: 'fromDate',
+          // v0.17.9+; if using scoped slots, apply this yourself instead
+          style: 'width: 100px',
+          align: 'center',
+          sortable: true,
+          type: 'date',
+          format: (value) => this.dateFormatter(value)
+        }, {
+          name: 'toDate',
+          label: '结束日期',
+          field: 'toDate',
+          style: 'width: 100px',
+          sortable: true,
+          align: 'center',
+          type: 'date',
+          format: (value) => this.dateFormatter(value)
+        }, {
+          name: 'permission',
+          align: 'center',
+          label: '审批状态',
+          field: 'permission',
+          style: 'width: 70px'
+        }, {
+          name: 'lookup',
+          label: '查看',
+          field: 'lookup',
+          align: 'center',
+          style: 'width: 80px'
+        }, {
+          name: 'deleteBtn',
+          label: '删除',
+          align: 'center',
+          field: 'deleteBtn',
+          style: 'width: 50px'
+        }
+      ],
+      manageColumns: [
         {
           label: '记录号',
           field: 'id',
@@ -177,16 +253,28 @@ export default {
           filter: true,
           type: 'number'
         }, {
+          label: '申请人',
+          field: 'name',
+          width: '100px',
+          sort: true,
+          filter: true,
+          type: 'string'
+        }, {
+          label: '学号',
+          field: 'id',
+          width: '50px',
+          filter: true
+        }, {
           label: '开始日期',
           field: 'fromDate',
-          width: '100px',
+          width: '150px',
           sort: true,
           type: 'date',
           format: (value) => this.dateFormatter(value)
         }, {
           label: '结束日期',
           field: 'toDate',
-          width: '100px',
+          width: '150px',
           sort: true,
           type: 'date',
           format: (value) => this.dateFormatter(value)
@@ -202,62 +290,10 @@ export default {
           filter: true
         }, {
           label: '查看',
-          field: 'lookup',
+          field: 'permit',
           width: '80px'
-        }, {
-          label: '删除',
-          field: 'deleteBtn',
-          width: '50px'
         }
-      ],
-      manageColumns: [{
-        label: '记录号',
-        field: 'id',
-        width: '100px',
-        sort: true,
-        filter: true,
-        type: 'number'
-      }, {
-        label: '申请人',
-        field: 'name',
-        width: '100px',
-        sort: true,
-        filter: true,
-        type: 'string'
-      }, {
-        label: '学号',
-        field: 'id',
-        width: '50px',
-        filter: true
-      }, {
-        label: '开始日期',
-        field: 'fromDate',
-        width: '150px',
-        sort: true,
-        type: 'date',
-        format: (value) => this.dateFormatter(value)
-      }, {
-        label: '结束日期',
-        field: 'toDate',
-        width: '150px',
-        sort: true,
-        type: 'date',
-        format: (value) => this.dateFormatter(value)
-      }, {
-        label: '申请类型',
-        field: 'type',
-        width: '100px',
-        filter: true
-      }, {
-        label: '审批状态',
-        field: 'permission',
-        width: '70px',
-        filter: true
-      }, {
-        label: '查看',
-        field: 'permit',
-        width: '80px'
-      }]
+      ]
     }
   },
   computed: {
@@ -339,6 +375,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="stylus">
 
 </style>

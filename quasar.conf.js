@@ -92,6 +92,7 @@ module.exports = function (ctx) {
         'QPage',
         'QRadio',
         'QRouteTab',
+        'QSearch',
         'QSpinnerMat',
         'QScrollArea',
         'QTable',
@@ -112,9 +113,9 @@ module.exports = function (ctx) {
       // Quasar plugins
       plugins: [
         'Notify'
-      ]
+      ],
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
-      // i18n: 'de' // Quasar language
+      i18n: 'zh-hans' // Quasar language
     },
     // animations: 'all' --- includes all animations
     animations: [],
