@@ -6,13 +6,15 @@
     <div class="bg-white">
       <q-table
         :title="title"
+        dense
         :data="leavingRecords"
         :filter="filter"
         :columns="userType === 'student' || userType === 'assistant' ? studentColumns : manageColumns"
         :visible-columns="visibleColumns"
         :options="[
           { label: 'Chinese (Simplified)', value: 'zh-hans' },
-        ]">
+        ]"
+        class="table-responsive">
 
         <template slot="top-left" slot-scope="props">
           <q-search

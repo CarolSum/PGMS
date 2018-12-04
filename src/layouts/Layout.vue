@@ -18,12 +18,12 @@
           <q-list link>
             <q-item>
               <q-item-main>
-                <q-item-tile label @click="callModal">修改密码</q-item-tile>
+                <q-item-tile label @click.native="callModal">修改密码</q-item-tile>
               </q-item-main>
             </q-item>
             <q-item>
               <q-item-main>
-                <q-item-tile label @click="logout">退出登录</q-item-tile>
+                <q-item-tile label @click.native="logout">退出登录</q-item-tile>
               </q-item-main>
             </q-item>
           </q-list>

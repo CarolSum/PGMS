@@ -115,7 +115,8 @@ module.exports = function (ctx) {
         'Notify'
       ],
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
-      i18n: 'zh-hans' // Quasar language
+      i18n: 'zh-hans', // Quasar language
+      cssAddon: true
     },
     // animations: 'all' --- includes all animations
     animations: [],
