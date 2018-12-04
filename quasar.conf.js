@@ -7,7 +7,8 @@ module.exports = function (ctx) {
     plugins: [
       'axios',
       'vuelidate',
-      'Notify'
+      'Notify',
+      'Dialog'
     ],
     css: [
       'app.styl'
@@ -73,6 +74,7 @@ module.exports = function (ctx) {
         'QCardTitle',
         'QCardSeparator',
         'QDatetime',
+        'QDialog',
         'QField',
         'QIcon',
         'QInput',

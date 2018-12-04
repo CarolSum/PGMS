@@ -109,3 +109,23 @@ export function failAlert ({info, icon}) {
     leave: 'bounceOutUp'
   })
 }
+
+// export function addDialog ({info, icon}) {
+//   Dialog.create({
+//     title: '请假详情',
+//     message: `asd`,
+//     buttons: [
+//       '取消',
+//       {
+//         label: '否决',
+//         color: 'negative',
+//         raised: true
+//       },
+//       {
+//         label: '批准',
+//         color: 'positive',
+//         raised: true
+//       }
+//     ]
+//   })
+// }

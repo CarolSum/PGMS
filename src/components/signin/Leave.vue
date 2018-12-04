@@ -11,6 +11,7 @@
         :filter="filter"
         :columns="userType === 'student' || userType === 'assistant' ? studentColumns : manageColumns"
         :visible-columns="visibleColumns"
+        row-key='id'
         :options="[
           { label: 'Chinese (Simplified)', value: 'zh-hans' },
         ]"
@@ -89,6 +90,7 @@
       </q-table>
     </div>
     <leave-modal ref="leaveModal"/>
+    <check-leave-modal ref="checkLeaveModal" />
   </div>
 </template>
 <script>
@@ -96,9 +98,10 @@ import { date } from '../../../node_modules/quasar-framework/dist/quasar.mat.esm
 import { mapState } from 'vuex'
 
 import LeaveModal from './LeaveModal.vue'
+import CheckLeaveModal from './CheckLeaveModal.vue'
 import { deleteLeavingRecord, getLeavingRecord } from 'src/api/sign-in'
-import { succeed, fail } from 'src/util/notification'
-import { PERMIT_LEAVING, GET_LEAVING_SUMMARY } from '../../store/signin/actions'
+import { succeed, fail } from '../../util/notification'
+import { GET_LEAVING_SUMMARY } from '../../store/signin/actions'
 import { DELETE_LEAVING_RECORD } from '../../store/signin/mutations'
 
 export function permissionDisplay (record) {
@@ -167,37 +170,17 @@ export function permissionDisplay (record) {
 export default {
   name: 'Leave',
   components: {
-    LeaveModal
+    LeaveModal,
+    CheckLeaveModal
   },
   data () {
     return {
       busy: false,
-      rowHeight: '53px',
       title: '请假记录',
-      bodyStyle: {
-        /* auto */
-      },
-      responsive: true,
-      pagination: {
-        rowsPerPage: 10,
-        options: [5, 10, 15, 30, 50, 100]
-      },
-      selection: false,
-      messages: {
-        noData: '没有数据',
-        noDataAfterFiltering: '没有符合条件的记录'
-      },
-      columnPicker: true,
-      labels: {
-        columns: '显示项目',
-        allCols: '在所有列中查找',
-        rows: '每页行数',
-        search: '查找',
-        all: '全部'
-      },
-      rightStickyColumns: 3,
+      checkLeaveModel: false,
       filter: '',
-      visibleColumns: ['id', 'fromDate', 'toDate', 'permission', 'lookup', 'deleteBtn'],
+      visibleStudentColumns: ['id', 'fromDate', 'toDate', 'permission', 'lookup', 'deleteBtn'],
+      visibleManageColumns: ['id', 'proposer', 'studentId', 'fromDate', 'toDate', 'permission', 'permit'],
       studentColumns: [
         {
           name: 'id',
@@ -248,49 +231,54 @@ export default {
       ],
       manageColumns: [
         {
+          name: 'id',
           label: '记录号',
           field: 'id',
           width: '100px',
-          sort: true,
-          filter: true,
+          align: 'center',
+          sortable: true,
           type: 'number'
         }, {
+          name: 'proposer',
           label: '申请人',
           field: 'name',
           width: '100px',
-          sort: true,
-          filter: true,
+          sortable: true,
+          align: 'center',
           type: 'string'
         }, {
+          name: 'studentId',
           label: '学号',
           field: 'id',
-          width: '50px',
-          filter: true
+          align: 'center',
+          width: '50px'
         }, {
+          name: 'fromDate',
           label: '开始日期',
           field: 'fromDate',
           width: '150px',
-          sort: true,
+          align: 'center',
+          sortable: true,
           type: 'date',
           format: (value) => this.dateFormatter(value)
         }, {
+          name: 'toDate',
           label: '结束日期',
           field: 'toDate',
           width: '150px',
-          sort: true,
+          sortable: true,
+          align: 'center',
           type: 'date',
           format: (value) => this.dateFormatter(value)
         }, {
-          label: '申请类型',
-          field: 'type',
-          width: '100px',
-          filter: true
-        }, {
+          name: 'permission',
           label: '审批状态',
           field: 'permission',
-          width: '70px',
-          filter: true
+          align: 'center',
+          width: '70px'
         }, {
+          name: 'permit',
+          align: 'center',
           label: '查看',
           field: 'permit',
           width: '80px'
@@ -302,7 +290,19 @@ export default {
     ...mapState({
       userType: 'userType',
       leavingRecords: state => state.signin.leavingRecords
-    })
+    }),
+    visibleColumns: {
+      get: function () {
+        return this.userType === 'student' || this.userType === 'assistant' ? this.visibleStudentColumns : this.visibleManageColumns
+      },
+      set: function (newValue) {
+        if (this.userType === 'student' || this.userType === 'assistant') {
+          this.visibleStudentColumns = newValue
+        } else {
+          this.visibleManageColumns = newValue
+        }
+      }
+    }
   },
   methods: {
     dateFormatter (value) {
@@ -332,42 +332,19 @@ export default {
     },
     callDialogLeavingPermit (event, done, id) {
       this.busy = true
-      getLeavingRecord(id)
-        .then(record => {
-          let fromDate = date.formatDate(new Date(record.fromDate), 'YYYY年MM月DD日')
-          let toDate = date.formatDate(new Date(record.toDate), 'YYYY年MM月DD日')
-          this.$q.dialog.create({
-            title: '请假详情',
-            message: `<div>申请人：${record.name}<br><br>开始日期：${fromDate}<br>结束日期：${toDate}<br><br>请假原因：<br>${record.reason.replace('\n', '<br>')}</div>`,
-            buttons: [
-              '取消',
-              {
-                label: '否决',
-                color: 'negative',
-                raised: true,
-                handler: () => {
-                  this.$store.dispatch(PERMIT_LEAVING, {id, value: -1})
-                    .then(() => succeed({info: '否决成功'}))
-                    .catch(error => fail({info: error.message}))
-                }
-              },
-              {
-                label: '批准',
-                color: 'positive',
-                raised: true,
-                handler: () => {
-                  this.$store.dispatch(PERMIT_LEAVING, {id, value: true})
-                    .then(() => succeed({info: '批准成功'}))
-                    .catch(error => fail({info: error.message}))
-                }
-              }
-            ]
-          })
-        })
+      this.showLeaveDialog(id)
         .catch(error => fail({info: error.message}))
         .finally(() => {
           this.busy = false
           done()
+        })
+    },
+    async showLeaveDialog (id) {
+      getLeavingRecord(id)
+        .then(record => {
+          let fromDate = date.formatDate(new Date(record.fromDate), 'YYYY年MM月DD日')
+          let toDate = date.formatDate(new Date(record.toDate), 'YYYY年MM月DD日')
+          this.$refs.checkLeaveModal.open(id, record, fromDate, toDate)
         })
     }
   },
