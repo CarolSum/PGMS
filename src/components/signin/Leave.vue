@@ -12,9 +12,6 @@
         :columns="userType === 'student' || userType === 'assistant' ? studentColumns : manageColumns"
         :visible-columns="visibleColumns"
         row-key='id'
-        :options="[
-          { label: 'Chinese (Simplified)', value: 'zh-hans' },
-        ]"
         class="table-responsive">
 
         <template slot="top-left" slot-scope="props">
