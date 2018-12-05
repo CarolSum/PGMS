@@ -1,6 +1,6 @@
 <template>
   <div class="layout-padding">
-    <q-card style="width: 500px; max-width: 95%;" class="bg-white">
+    <q-card style="width: 500px; max-width: 95%; margin: 8px" class="bg-white">
       <q-card-title>
         您好, {{ name }} {{ userType === 'teacher' ? '老师' : '同学' }}
         <span slot="subtitle">签到数据库更新时间：{{ updateDate }}</span>
@@ -55,7 +55,7 @@
       </q-card-main>
     </q-card>
     <template v-for="(item, index) in leavingRecords">
-      <q-card inline  style="width: 400px; max-width: 95%" class="bg-white" :key="index" >
+      <q-card inline  style="width: 400px; max-width: 95%; margin: 8px" class="bg-white" :key="index" >
         <q-card-title>
           当前活跃的请假申请
         </q-card-title>
@@ -140,6 +140,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="stylus">
 
 </style>
