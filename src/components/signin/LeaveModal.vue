@@ -119,7 +119,6 @@ export default {
     applyAction (event, done) {
       if ([this.dateRange.from, this.dateRange.to, this.reason].some(value => !value)) {
         warn({info: '请输入所有必要信息'})
-        done()
         return
       }
       let record = {
@@ -137,7 +136,6 @@ export default {
           })
           .catch(error => fail(error.message))
           .finally(() => {
-            done()
             this.active = false
           })
       } else {
@@ -150,7 +148,6 @@ export default {
         })
           .catch(error => fail({info: error.message}))
           .finally(() => {
-            done()
             this.active = false
           })
       }

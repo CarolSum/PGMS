@@ -312,7 +312,6 @@ export default {
         .then(record => this.$refs.leaveModal.open(record))
         .catch(error => fail({info: error.message}))
         .finally(() => {
-          done()
           this.busy = false
         })
     },
@@ -333,7 +332,6 @@ export default {
         .catch(error => fail({info: error.message}))
         .finally(() => {
           this.busy = false
-          done()
         })
     },
     async showLeaveDialog (id) {
