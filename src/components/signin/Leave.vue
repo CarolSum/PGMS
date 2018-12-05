@@ -1,24 +1,23 @@
 <template>
-  <div class="layout-padding">
+  <div class="layout-padding" id="leave-page">
     <div v-if="userType === 'student' || userType === 'assistant'" style="padding-bottom: 20px">
       <q-btn color="green" icon="add" @click="callModalLeavingApply">申请请假</q-btn>
     </div>
     <div class="bg-white">
       <q-table
         :title="title"
-        dense
         :data="leavingRecords"
         :filter="filter"
         :columns="userType === 'student' || userType === 'assistant' ? studentColumns : manageColumns"
         :visible-columns="visibleColumns"
-        row-key='id'
-        class="table-responsive">
+        row-key='id'>
 
         <template slot="top-left" slot-scope="props">
           <q-search
             hide-underline
             color="secondary"
             v-model="filter"
+            style="margin-left: 8px"
             class="col-6"
             clearable
           />
@@ -349,6 +348,8 @@ export default {
 }
 </script>
 
-<style scoped lang="stylus">
-
+<style lang="stylus">
+#leave-page
+  table.q-table.q-table-horizontal-separator tbody tr:nth-child(odd)
+    background #eee
 </style>
