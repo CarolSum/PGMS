@@ -37,23 +37,47 @@
         <q-card-title>
           {{ title }}
         </q-card-title>
-        <q-data-table
+        <q-table
           :data="studentsInfo"
-          :config="config"
-          :columns="teacherColumns">
-          <template slot="col-interval" slot-scope="cell">
+          :filter="teacherfilter"
+          :columns="teacherColumns"
+          selection="multiple"
+          :selected.sync="selected"
+          color="secondary"
+          :visible-columns="teacherVisibleColumns">
+
+          <template slot="top-left" slot-scope="props">
+            <q-search
+              hide-underline
+              color="secondary"
+              v-model="teacherfilter"
+              class="col-6"
+              style="margin-left:8px"
+              clearable
+            />
+          </template>
+
+          <template slot="top-right" slot-scope="props">
+            <q-table-columns
+              color="secondary"
+              class="q-mr-sm"
+              v-model="teacherVisibleColumns"
+              label="显示项目"
+              :columns="teacherColumns"
+            />
+          </template>
+
+          <q-td slot="body-cell-interval" slot-scope="props" :props="props">
             <div style="display: inline-block; width: 50px">
-              {{ cell.data + '天'}}
+              {{ props.row.interval + '天'}}
             </div>
-            <q-btn
-              flat
-              @click="callDialog({rows: [{data: cell.row}]})"
-            >
+            <q-btn flat @click="callDialog({rows: [{data: props.row}]})">
               <q-icon name="edit"/>
             </q-btn>
-          </template>
-          <template slot="col-isLeaving" slot-scope="cell">
-            <div v-if="cell.data">
+          </q-td>
+
+          <q-td slot="body-cell-status" slot-scope="props" :props="props">
+            <div v-if="props.row.status">
               <q-icon color="warning" name="info" style="font-size: 22px"/>
               <q-tooltip>请假中</q-tooltip>
             </div>
@@ -61,13 +85,14 @@
               <q-icon color="positive" name="check circle" style="font-size: 22px"/>
               <q-tooltip>正常</q-tooltip>
             </div>
+          </q-td>
+
+          <template slot="top-selection" slot-scope="props">
+            <q-btn color="secondary"  label="批量修改签到间隔" class="q-mr-sm" @click="callDialog(selection)" />
+            <div class="col" />
           </template>
-          <template slot="selection" slot-scope="selection">
-            <q-btn color="primary" @click="callDialog(selection)" flat>
-              批量修改签到间隔
-            </q-btn>
-          </template>
-        </q-data-table>
+
+        </q-table>
       </q-card>
     </div>
   </div>
@@ -143,46 +168,43 @@ export default {
           classes: 'record-table-column'
         }
       ],
+      teacherfilter: '',
+      teacherVisibleColumns: ['name', 'interval', 'lastRegisterDate', 'lastRegisterPlace'],
       teacherColumns: [
         {
+          name: 'name',
           label: '姓名',
           field: 'name',
           width: '100px',
-          classes: 'record-table-column',
-          filter: true
+          align: 'center',
+          classes: 'record-table-column'
         }, {
+          name: 'interval',
           label: '签到间隔',
           field: 'interval',
+          align: 'center',
           width: '106px',
-          classes: 'record-table-column',
-          filter: true
+          classes: 'record-table-column'
         }, {
-          label: '年级',
-          field: 'grade',
-          classes: 'record-table-column',
-          width: '50px'
-        }, {
+          name: 'lastRegisterDate',
           label: '上次签到时间',
           field: 'lastRegisterDate',
           width: '100px',
+          align: 'center',
           classes: 'record-table-column',
           format: (value) => this.dateFormatter(value)
         }, {
+          name: 'lastRegisterPlace',
           label: '上次签到地点',
           field: 'lastRegisterPlace',
           width: '100px',
-          classes: 'record-table-column',
-          filter: true
-        }, {
-          label: '状态',
-          field: 'status',
-          width: '80px',
-          classes: 'record-table-column',
-          filter: true
+          align: 'center',
+          classes: 'record-table-column'
         }
       ],
       lectureFiltered: false,
-      dialogInterval: 2
+      dialogInterval: 2,
+      selected: []
     }
   },
   computed: {
