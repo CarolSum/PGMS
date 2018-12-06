@@ -88,7 +88,7 @@
           </q-td>
 
           <template slot="top-selection" slot-scope="props">
-            <q-btn color="secondary"  label="批量修改签到间隔" class="q-mr-sm" @click="callDialog(selection)" />
+            <q-btn color="secondary"  label="批量修改签到间隔" class="q-mr-sm" @click="callDialog(selected)" />
             <div class="col" />
           </template>
 
@@ -99,7 +99,6 @@
 </template>
 
 <script>
-import { Dialog } from 'quasar'
 import { date } from '../../../node_modules/quasar-framework/dist/quasar.mat.esm.js'
 import { mapState } from 'vuex'
 import { succeed, fail, warn } from '../../util/notification'
@@ -241,8 +240,9 @@ export default {
   },
   methods: {
     callDialog: function (selection) {
+      console.log(selection)
       let ids = selection.rows.map(item => item.data.id)
-      Dialog.create({
+      this.$q.dialog({
         title: `正在修改${ids.map(item => this.studentsMap[item].name).join(', ')}的签到间隔`,
         form: {
           newInterval: {
