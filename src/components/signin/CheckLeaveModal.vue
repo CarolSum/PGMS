@@ -27,9 +27,9 @@
     </div>
 
     <template slot="buttons" slot-scope="props">
-      <q-btn color="primary" label="批准" @click.native="choose(props.ok, 'permit')" />
-      <q-btn color="negative" label="否决" @click="choose(props.ok, 'deny')" />
       <q-btn flat label="取消" @click="props.cancel" />
+      <q-btn color="negative" label="否决" @click="choose(props.ok, 'deny')" />
+      <q-btn color="primary" label="批准" @click.native="choose(props.ok, 'permit')" />
     </template>
   </q-dialog>
 </template>

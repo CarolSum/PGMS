@@ -95,6 +95,7 @@ module.exports = function (ctx) {
         'QRadio',
         'QRouteTab',
         'QSearch',
+        'QSlider',
         'QSpinnerMat',
         'QScrollArea',
         'QTable',

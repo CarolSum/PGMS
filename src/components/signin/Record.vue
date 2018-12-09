@@ -71,7 +71,7 @@
             <div style="display: inline-block; width: 50px">
               {{ props.row.interval + '天'}}
             </div>
-            <q-btn flat @click="callDialog({rows: [{data: props.row}]})">
+            <q-btn flat @click="callDialog([props.row])">
               <q-icon name="edit"/>
             </q-btn>
           </q-td>
@@ -95,17 +95,22 @@
         </q-table>
       </q-card>
     </div>
+    <change-interval-dialog ref="ChangeIntervalDialog" @setInterval="setSigninInterval"/>
   </div>
 </template>
 
 <script>
 import { date } from '../../../node_modules/quasar-framework/dist/quasar.mat.esm.js'
 import { mapState } from 'vuex'
+import ChangeIntervalDialog from './ChangeIntervalDialog.vue'
 import { succeed, fail, warn } from '../../util/notification'
 import { SET_INTERVAL, GET_RECORD } from '../../store/signin/actions'
 
 export default {
   name: 'Record',
+  components: {
+    ChangeIntervalDialog
+  },
   data () {
     return {
       title: this.$store.state.userType === 'teacher' ? '学生情况' : '签到记录',
@@ -203,7 +208,8 @@ export default {
       ],
       lectureFiltered: false,
       dialogInterval: 2,
-      selected: []
+      selected: [],
+      ids: []
     }
   },
   computed: {
@@ -241,45 +247,27 @@ export default {
   methods: {
     callDialog: function (selection) {
       console.log(selection)
-      let ids = selection.rows.map(item => item.data.id)
-      this.$q.dialog({
-        title: `正在修改${ids.map(item => this.studentsMap[item].name).join(', ')}的签到间隔`,
-        form: {
-          newInterval: {
-            label: '新签到间隔',
-            type: 'slider',
-            min: 1,
-            max: 3,
-            withLabel: true,
-            model: this.dialogInterval,
-            color: 'primary'
-          }
-        },
-        buttons: [
-          '取消',
-          {
-            label: '确定',
-            color: 'positive',
-            raised: true,
-            handler: (data) => {
-              if (ids.every(id => data.newInterval === this.studentsMap[id].interval)) {
-                warn({info: '请输入与当前设定不同的间隔'})
-              } else if (data.newInterval < 0) {
-                warn({info: '请输入大于0的间隔'})
-              } else {
-                this.$store.dispatch(SET_INTERVAL, {
-                  ids,
-                  newInterval: data.newInterval
-                })
-                  .then(() => succeed({info: '修改成功'}))
-                  .catch(error => fail({info: error.message})
-                  )
-              }
-            }
-          }
-        ]
+      this.ids = selection.map(item => item.id)
+      this.$refs.ChangeIntervalDialog.open({
+        title: '修改签到间隔',
+        message: `正在修改${this.ids.map(item => this.studentsMap[item].name).join(', ')}的签到间隔`
       })
     },
+
+    setSigninInterval (newInterval) {
+      if (this.ids.every(id => newInterval === this.studentsMap[id].interval)) {
+        warn({info: '请输入与当前设定不同的间隔'})
+      } else if (newInterval < 0) {
+        warn({info: '请输入大于0的间隔'})
+      } else {
+        this.$store.dispatch(SET_INTERVAL, {
+          ids: this.ids,
+          newInterval
+        }).then(() => succeed({info: '修改成功'}))
+          .catch(error => fail({info: error.message}))
+      }
+    },
+
     dateFormatter (value) {
       if (!value) {
         return '无'
