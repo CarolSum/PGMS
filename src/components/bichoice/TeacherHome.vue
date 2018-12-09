@@ -6,7 +6,8 @@
           :data="studentList"
           :columns="columns"
           :visible-columns="visibleColumns"
-          :filter="filter">
+          :filter="filter"
+          title="选择列表">
 
           <template slot="top-left" slot-scope="props">
             <q-search
@@ -304,37 +305,28 @@ export default {
     },
     chooseStudent (event) {
       let store = this.$store
-      this.$q.dialog.create({
+      this.$q.dialog({
         title: '警告',
         message: '请您确认是否有足够经费支撑硕士研究生未来几年的科研活动支出（如会议注册费、版面费、专利申请费等）。学院将会抽查确认。',
-        buttons: [
-          {
-            label: '放弃',
-            color: 'negative',
-            outline: true
-          },
-          {
-            label: '确定招收',
-            color: 'positive',
-            outline: true,
-            handler () {
-              store.dispatch(CHOOSE_STUDENT, {id: store.state.bichoice.selectedId}).then(() => {
-                succeed({info: '选择成功'})
-              }).catch(error => {
-                if (error.response.status === 405) {
-                  fail({info: '选择失败,已选择过该学生'})
-                } else if (error.response.status === 406) {
-                  fail({info: '选择失败,已超过最大选择数量'})
-                } else {
-                  fail({info: '选择失败'})
-                }
-              }).finally(() => {
-                store.dispatch(GET_SELECTED_LIST)
-                store.dispatch(GET_TEACHER_CHOOSABLE_ID)
-              })
-            }
+        ok: '确定招收',
+        cancel: '放弃'
+      }).then(data => {
+        store.dispatch(CHOOSE_STUDENT, {id: store.state.bichoice.selectedId}).then(() => {
+          succeed({info: '选择成功'})
+        }).catch(error => {
+          if (error.response.status === 405) {
+            fail({info: '选择失败,已选择过该学生'})
+          } else if (error.response.status === 406) {
+            fail({info: '选择失败,已超过最大选择数量'})
+          } else {
+            fail({info: '选择失败'})
           }
-        ]
+        }).finally(() => {
+          store.dispatch(GET_SELECTED_LIST)
+          store.dispatch(GET_TEACHER_CHOOSABLE_ID)
+        })
+      }).catch(() => {
+        // this.$q.notify('Ok, no mood for talking, right?')
       })
     },
     cancelStudent (event) {
