@@ -37,7 +37,7 @@
         </q-td>
       </q-table>
     </div>
-    <!-- <register-modal v-model="registerModalActive"/> -->
+    <register-modal v-model="registerModalActive"/>
   </div>
 </template>
 
