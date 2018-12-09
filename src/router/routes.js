@@ -1,3 +1,4 @@
+import store from '../store/index'
 
 const routes = [
   {
@@ -20,7 +21,33 @@ const routes = [
       {path: '', redirect: 'home'}
     ]
   },
-  {path: '/', redirect: '/login'}
+  {
+    path: '/bichoice',
+    component: () => import('layouts/Layout'),
+    meta: {requireAuth: true, subsystemName: 'bichoice'},
+    children: [
+      // {path: 'studentHome', component: () => import('bichoice/StudentHome.vue')},
+      {path: 'teacherHome', component: () => import('components/bichoice/TeacherHome.vue')},
+      // {path: 'adminStudent', component: () => import('bichoice/AdminStudent.vue')},
+      // {path: 'adminTeacher', component: () => import('bichoice/AdminTeacher.vue')},
+      // {path: 'adminHome', component: () => import('bichoice/AdminHome.vue')},
+      // {path: 'studentSetting', component: () => import('bichoice/StudentSetting.vue')},
+      {path: 'teacherSetting', component: () => import('components/bichoice/TeacherSetting.vue')},
+      {
+        path: '',
+        redirect: to => {
+          if (store.state.userType === 'bistudent') {
+            return 'studentHome'
+          } else if (store.state.userType === 'biadmin') {
+            return 'adminStudent'
+          }
+          return 'teacherHome'
+        }
+      }
+    ]
+  },
+  {path: '/', redirect: '/login'},
+  {path: '*', component: () => import('pages/Error404.vue')} // 404 Not found, always leave this statement at last.
 ]
 
 // Always leave this as last one

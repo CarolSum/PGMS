@@ -253,18 +253,6 @@ export default {
 </script>
 
 <style lang="stylus">
-  // These styles are used to fix the improper cell height that data table component in quasar 0.14 produces
-  // when rendering Chinese characters with multiple selection enabled.
-  // You may inactivate these styles to see the problem and teach me how to fix it more elegantly. :)
-  // .table-fix > div > div > div.q-data-table-container > div:nth-child(4) > table > thead > tr
-  //   height 36px
-
-  // .table-fix > div > div > div.q-data-table-container > div:nth-child(3) > table > tbody > tr:first-child > td
-  //   height 55px
-
-  // .table-fix > div > div > div.q-data-table-container > div:nth-child(3) > table > tbody > tr:not(:first-child) > td
-  //   height 52px
-
   #record
     .record-card
       margin 0
