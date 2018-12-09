@@ -114,35 +114,6 @@ export default {
   data () {
     return {
       title: this.$store.state.userType === 'teacher' ? '学生情况' : '签到记录',
-      config: {
-        rowHeight: '55px',
-        bodyStyle: {
-          /* auto */
-        },
-        responsive: true,
-        pagination: {
-          rowsPerPage: 10,
-          options: [5, 10, 15, 30, 50, 100]
-        },
-        selection: this.$store.state.userType === 'teacher' ? 'multiple' : false,
-        messages: {
-          noData: '没有数据',
-          noDataAfterFiltering: '没有符合条件的记录'
-        },
-        columnPicker: true,
-        labels: {
-          columns: '显示项目',
-          allCols: '在所有列中查找',
-          rows: '每页行数',
-          search: '查找',
-          all: '全部',
-          selected: {
-            singular: '学生 已选择',
-            plural: '学生 已选择'
-          },
-          clear: '清空'
-        }
-      },
       studentfilter: '',
       studentVisibleColumns: ['date', 'place', 'registerName'],
       studentColumns: [

@@ -15,6 +15,7 @@ const routes = [
       {path: 'home', component: () => import('components/signin/Home.vue')},
       {path: 'leave', component: () => import('components/signin/Leave.vue')},
       {path: 'record', component: () => import('components/signin/Record.vue')},
+      {path: 'lecture-manage', component: () => import('components/signin/LectureManage.vue')},
       {path: 'personal', component: () => import('components/signin/Personal.vue')},
       {path: '', redirect: 'home'}
     ]
