@@ -349,7 +349,4 @@ export default {
 </script>
 
 <style lang="stylus">
-#leave-page
-  table.q-table.q-table-horizontal-separator tbody tr:nth-child(odd)
-    background #eee
 </style>

@@ -266,10 +266,6 @@ export default {
   //   height 52px
 
   #record
-
-    table tbody tr:nth-child(odd)
-       background: #eee
-
     .record-card
       margin 0
 
