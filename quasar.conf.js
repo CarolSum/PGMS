@@ -95,6 +95,7 @@ module.exports = function (ctx) {
         'QRadio',
         'QRouteTab',
         'QSearch',
+        'QSelect',
         'QSlider',
         'QSpinnerMat',
         'QScrollArea',
@@ -108,7 +109,8 @@ module.exports = function (ctx) {
         'QToggle',
         'QToolbar',
         'QToolbarTitle',
-        'QTooltip'
+        'QTooltip',
+        'QUploader'
       ],
       directives: [
         'Ripple'
