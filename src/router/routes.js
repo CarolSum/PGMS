@@ -26,12 +26,12 @@ const routes = [
     component: () => import('layouts/Layout'),
     meta: {requireAuth: true, subsystemName: 'bichoice'},
     children: [
-      // {path: 'studentHome', component: () => import('bichoice/StudentHome.vue')},
+      {path: 'studentHome', component: () => import('components/bichoice/StudentHome.vue')},
       {path: 'teacherHome', component: () => import('components/bichoice/TeacherHome.vue')},
       // {path: 'adminStudent', component: () => import('bichoice/AdminStudent.vue')},
       // {path: 'adminTeacher', component: () => import('bichoice/AdminTeacher.vue')},
       // {path: 'adminHome', component: () => import('bichoice/AdminHome.vue')},
-      // {path: 'studentSetting', component: () => import('bichoice/StudentSetting.vue')},
+      {path: 'studentSetting', component: () => import('components/bichoice/StudentSetting.vue')},
       {path: 'teacherSetting', component: () => import('components/bichoice/TeacherSetting.vue')},
       {
         path: '',
