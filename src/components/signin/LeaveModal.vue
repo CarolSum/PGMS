@@ -116,7 +116,7 @@ export default {
       this.reason = record.reason
       this.active = true
     },
-    applyAction (event, done) {
+    applyAction (event) {
       if ([this.dateRange.from, this.dateRange.to, this.reason].some(value => !value)) {
         warn({info: '请输入所有必要信息'})
         return

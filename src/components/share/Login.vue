@@ -53,7 +53,7 @@ export default {
     }
   },
   methods: {
-    login (event, done) {
+    login (event) {
       if (this.$v.$invalid) {
         return false
       }
@@ -67,7 +67,6 @@ export default {
           this.$router.push(this.$store.getters.navigationItems[0].to)
         })
         .catch(error => fail({info: error.message}))
-      // .finally(() => done())
     }
   },
   validations: {

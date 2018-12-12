@@ -145,7 +145,7 @@
                 <a target="_blank" :href="'/'+file">{{decodeURI(file.split('/').pop())}}</a>
               </q-item-main>
               <q-item-side right>
-                <q-btn color="red" loader @click="(event,done) => deleteFile(event,done,file)">
+                <q-btn color="red" loader @click="(event) => deleteFile(event,file)">
                   <q-icon name="delete"></q-icon>
                 </q-btn>
               </q-item-side>
@@ -186,7 +186,7 @@ export default {
     changeInfo (name, value) {
       this.$store.commit(UPDATE_PERSON_INFO, [name, value])
     },
-    updateInfo (event, done) {
+    updateInfo (event) {
       this.$store.dispatch(UPLOAD_PERSON_INFO, this.$store.state.bichoice.personinfo.data).then(() => {
         succeed({info: '成功更新'})
       }).catch(error => {
@@ -197,17 +197,14 @@ export default {
         } else {
           fail({info: '修改失败'})
         }
-      }).finally(() => {
-        done()
       })
     },
     upload () {
       this.$refs.uploader.open()
     },
-    deleteFile (event, done, file) {
+    deleteFile (event, file) {
       this.$store.dispatch(STUDENT_DELETE_FILE, {file}).finally(() => {
         this.$store.dispatch(STUDENT_GET_FILE_LIST).finally(() => {
-          done()
         })
       })
     },

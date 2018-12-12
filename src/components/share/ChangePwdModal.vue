@@ -142,7 +142,7 @@ export default {
     }
   },
   methods: {
-    changePassword (event, done) {
+    changePassword (event) {
       if (this.$v.$invalid) {
         return
       }
@@ -158,7 +158,6 @@ export default {
           this.$router.push('/')
         })
         .catch(error => fail({info: error.message}))
-        .finally(() => done())
     }
   }
 }
