@@ -28,9 +28,9 @@ const routes = [
     children: [
       {path: 'studentHome', component: () => import('components/bichoice/StudentHome.vue')},
       {path: 'teacherHome', component: () => import('components/bichoice/TeacherHome.vue')},
-      // {path: 'adminStudent', component: () => import('bichoice/AdminStudent.vue')},
-      // {path: 'adminTeacher', component: () => import('bichoice/AdminTeacher.vue')},
-      // {path: 'adminHome', component: () => import('bichoice/AdminHome.vue')},
+      {path: 'adminStudent', component: () => import('components/bichoice/AdminStudent.vue')},
+      {path: 'adminTeacher', component: () => import('components/bichoice/AdminTeacher.vue')},
+      {path: 'adminHome', component: () => import('components/bichoice/AdminHome.vue')},
       {path: 'studentSetting', component: () => import('components/bichoice/StudentSetting.vue')},
       {path: 'teacherSetting', component: () => import('components/bichoice/TeacherSetting.vue')},
       {
