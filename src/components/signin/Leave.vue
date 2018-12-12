@@ -52,7 +52,7 @@
           <q-btn
             :disable="busy"
             color="secondary"
-            @click="(event, done) => callModalLeavingModify(event, done, props.row.id)"
+            @click="(event) => callModalLeavingModify(event, props.row.id)"
           >
             <q-icon name="search"/>
             <q-spinner-mat slot="loading"/>
@@ -77,7 +77,7 @@
           <q-btn
             :disable="busy"
             color="secondary"
-            @click="(event, done) => callDialogLeavingPermit(event, done, props.row.id)"
+            @click="(event) => callDialogLeavingPermit(event, props.row.id)"
           >
             <q-icon name="search"/>
             <q-spinner-mat slot="loading"/>
@@ -305,7 +305,7 @@ export default {
       return date.formatDate(new Date(value), 'YYYY年MM月DD日')
     },
     permissionDisplay,
-    callModalLeavingModify (event, done, id) {
+    callModalLeavingModify (event, id) {
       this.busy = true
       getLeavingRecord(id)
         .then(record => this.$refs.leaveModal.open(record))
@@ -325,7 +325,7 @@ export default {
         })
         .catch(error => fail({info: error.message}))
     },
-    callDialogLeavingPermit (event, done, id) {
+    callDialogLeavingPermit (event, id) {
       this.busy = true
       this.showLeaveDialog(id)
         .catch(error => fail({info: error.message}))

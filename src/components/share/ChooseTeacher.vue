@@ -153,7 +153,7 @@ export default {
     open (id) {
       this.adminSelectedStudent = id
     },
-    chooseTeacher (event, done) {
+    chooseTeacher (event) {
       if (this.userType === 'biadmin') {
         this.$store.dispatch(ADMIN_STUDENT_CHOOSE_TEACHER, [this.adminSelectedStudent, this.$store.state.bichoice.selectedId]).then(() => {
           succeed({info: '选择成功'})
@@ -167,7 +167,6 @@ export default {
             fail({info: '选择失败'})
           }
         }).finally(() => {
-          done()
           this.$store.dispatch(ADMIN_GET_STUDENT_SELECTED_LIST, this.adminSelectedStudent)
           this.$store.dispatch(ADMIN_GET_STUDENT_CHOOSABLE_LIST, this.adminSelectedStudent)
         })
@@ -184,13 +183,12 @@ export default {
             fail({info: '选择失败'})
           }
         }).finally(() => {
-          done()
           this.$store.dispatch(GET_SELECTED_LIST)
           this.$store.dispatch(GET_STUDENT_CHOOSABLE_ID)
         })
       }
     },
-    cancelTeacher (event, done) {
+    cancelTeacher (event) {
       if (this.userType !== 'biadmin') {
         this.$store.dispatch(CANCEL_TEACHER, {id: this.$store.state.bichoice.selectedId}).then(() => {
           succeed({info: '取消选择成功'})
@@ -202,7 +200,6 @@ export default {
             fail({info: '取消选择失败'})
           }
         }).finally(() => {
-          done()
           this.$store.dispatch(GET_SELECTED_LIST)
           this.$store.dispatch(GET_STUDENT_CHOOSABLE_ID)
         })
@@ -217,7 +214,6 @@ export default {
             fail({info: '取消选择失败'})
           }
         }).finally(() => {
-          done()
           this.$store.dispatch(ADMIN_GET_STUDENT_SELECTED_LIST, this.adminSelectedStudent)
           this.$store.dispatch(ADMIN_GET_STUDENT_CHOOSABLE_LIST, this.adminSelectedStudent)
         })
